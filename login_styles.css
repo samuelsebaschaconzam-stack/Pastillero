@@ -1,0 +1,254 @@
+/* 1.paleta de colores base*/
+:root {
+  --bg: rgb(241, 245, 247);
+  --surface: rgb(255, 255, 255);
+  --ink: rgb(21, 37, 45);
+  --muted: rgb(91, 110, 120);
+  --line: rgb(217, 226, 231);
+  --accent: rgb(37, 84, 216);
+  --on-accent: rgb(255, 255, 255);
+  --soft: rgb(227, 235, 251);
+  --danger: rgb(211, 47, 47);
+
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: rgb(15, 26, 32);
+    --surface: rgb(23, 37, 45);
+    --ink: rgb(232, 240, 243);
+    --muted: rgb(154, 176, 186);
+    --line: rgb(42, 60, 70);
+    --accent: rgb(122, 162, 255);
+    --on-accent: rgb(15, 26, 32);
+    --soft: rgb(30, 47, 79);
+    --danger: rgb(244, 113, 113);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: rgb(15, 26, 32);
+  --surface: rgb(23, 37, 45);
+  --ink: rgb(232, 240, 243);
+  --muted: rgb(154, 176, 186);
+  --line: rgb(42, 60, 70);
+  --accent: rgb(122, 162, 255);
+  --on-accent: rgb(15, 26, 32);
+  --soft: rgb(30, 47, 79);
+  --danger: rgb(244, 113, 113);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 Figtree, system-ui, sans-serif;
+  display: grid;
+  place-items: center;
+  padding: 20px 16px;
+}
+
+h1 {
+  font-family: "Bricolage Grotesque", Figtree, system-ui, sans-serif;
+  font-size: 2rem;
+  margin: 8px 0 4px;
+  letter-spacing: -0.01em;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 2.contenedor principal*/
+.login-wrap {
+  width: 100%;
+  max-width: 520px;
+}
+
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 28px 24px;
+  box-shadow: 0 16px 36px rgba(15, 26, 32, 0.08);
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.login-sub {
+  color: var(--muted);
+  margin: 0 0 22px;
+}
+
+/* 3.selección de roles*/
+.role-cards {
+  display: grid;
+  gap: 12px;
+}
+
+.role-card {
+  text-align: left;
+  background: var(--bg);
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  display: grid;
+  gap: 6px;
+  transition: border-color 0.15s, transform 0.1s, background-color 0.15s;
+}
+
+.role-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.role-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.role-card strong {
+  font-size: 1.12rem;
+  color: var(--accent);
+}
+
+.role-tag {
+  background: var(--soft);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.role-card span:last-child {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* 4.PIN*/
+.pin-box {
+  background: var(--bg);
+  border: 1.5px solid var(--accent);
+  border-radius: 16px;
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.pin-box label {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.pin-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.pin-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.input-pass-wrap {
+  flex: 1 1 180px;
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding-right: 6px;
+}
+
+.input-pass-wrap:focus-within {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.in {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 11px 12px;
+  font-size: 1.05rem;
+  outline: none;
+}
+
+.btn-eye {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-eye:hover {
+  border-color: var(--accent);
+}
+
+.btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 11px 22px;
+  font-weight: 600;
+  background: var(--accent);
+  color: var(--on-accent);
+  cursor: pointer;
+}
+
+.pin-error {
+  margin: 0;
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.btn-link {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  text-decoration: underline;
+  cursor: pointer;
+  justify-self: start;
+  padding: 4px 0;
+  font-size: 0.9rem;
+}
+
+[hidden] {
+  display: none !important;
+}

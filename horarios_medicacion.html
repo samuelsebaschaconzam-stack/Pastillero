@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Horarios de medicación</title>
+<link rel="stylesheet" href="pastillero_styles.css">
+</head>
+<body>
+<div id="modal-resumen" class="role-overlay" role="dialog" aria-modal="true" aria-labelledby="resumen-titulo" hidden>
+  <div class="role-modal">
+    <div class="head">
+      <h2 id="resumen-titulo">Resumen del día</h2>
+      <button type="button" class="btn alt" id="btn-cerrar-resumen" style="padding:6px 14px;">Cerrar</button>
+    </div>
+    <p class="role-sub" id="resumen-subtitulo">Detalle de tomas y observaciones registradas.</p>
+    <pre id="resumen-texto" class="resumen-box"></pre>
+    <div class="actions" style="margin-top:14px;">
+      <button type="button" class="btn" id="btn-copiar-resumen">Copiar para enviar relevo</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-admin" class="role-overlay" role="dialog" aria-modal="true" aria-labelledby="admin-modal-titulo" hidden>
+  <div class="role-modal admin-modal-wide">
+    <div class="head">
+      <h2 id="admin-modal-titulo">Panel de Administración</h2>
+      <button type="button" class="btn alt" id="btn-cerrar-admin" style="padding:6px 14px;">Cerrar</button>
+    </div>
+    <p class="role-sub">Configuración de acceso y mantenimiento del sistema.</p>
+
+    <div class="admin-sections">
+      <section class="admin-card">
+        <h3>Seguridad de acceso (PIN o contraseña)</h3>
+        <p class="muted-small" style="margin:4px 0 10px;">Define el PIN o contraseña para Administrador y Enfermero/Cuidador (déjalos vacíos para acceso sin clave).</p>
+        <div class="row">
+          <div>
+            <label for="adm-pin">Clave Administrador</label>
+            <input class="in" id="adm-pin" type="password" maxlength="20" placeholder="Ej. 1234">
+          </div>
+          <div>
+            <label for="adm-pin-enfermero">Clave Enfermero / Cuidador</label>
+            <input class="in" id="adm-pin-enfermero" type="password" maxlength="20" placeholder="Ej. 0000">
+          </div>
+        </div>
+        <div class="actions" style="margin-top:10px;">
+          <button type="button" class="btn alt" id="btn-guardar-pin">Guardar claves de acceso</button>
+        </div>
+      </section>
+
+      <section class="admin-card danger-zone">
+        <h3>Mantenimiento de registros</h3>
+        <p class="muted-small" style="margin:4px 0 10px;">Acciones avanzadas de limpieza sobre la base de datos local.</p>
+        <div class="actions">
+          <button type="button" class="btn alt" id="btn-limpiar-dia">Borrar historial del día seleccionado</button>
+          <button type="button" class="btn alt" id="btn-restaurar-demo">Restaurar medicamentos de ejemplo</button>
+          <button type="button" class="btn danger" id="btn-borrar-todo">Borrar todo el horario</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Pastillero</h1>
+      <p class="date" id="fecha-actual">Cargando fecha...</p>
+    </div>
+    <div class="top-actions">
+      <span id="badge-rol" class="role-badge">Rol: Sin asignar</span>
+      <button class="btn alt" type="button" id="btn-cambiar-rol">Cambiar rol</button>
+      <button class="btn alt" type="button" id="btn-historial">Resumen del día</button>
+      <button class="btn" type="button" id="btn-panel-admin" hidden>Administración</button>
+    </div>
+  </header>
+
+  <div id="ficha-banner" class="patient-banner" hidden>
+    <div class="patient-main">
+      <strong id="ficha-nombre-txt"></strong>
+      <span id="ficha-contacto-txt" class="muted-small"></span>
+    </div>
+    <div id="ficha-alergia-badge" class="allergy-pill" hidden></div>
+  </div>
+
+  <section class="calendar-box is-minimized" id="calendar-box" aria-label="Calendario de seguimiento">
+    <div class="cal-head">
+      <div class="cal-nav-group">
+        <button type="button" class="btn alt cal-nav" id="cal-prev" aria-label="Periodo anterior">‹</button>
+        <h2 id="cal-titulo">Noviembre 2026</h2>
+        <button type="button" class="btn alt cal-nav" id="cal-next" aria-label="Periodo siguiente">›</button>
+      </div>
+      <div class="cal-tools">
+        <button type="button" class="btn alt cal-tool-btn" id="btn-ir-hoy">Hoy</button>
+        <button type="button" class="btn alt cal-tool-btn" id="btn-toggle-cal" aria-expanded="false">Expandir mes</button>
+      </div>
+    </div>
+
+    <div class="week-strip" id="week-strip" role="group" aria-label="Días cercanos"></div>
+
+    <div id="cal-full-wrapper" hidden>
+      <div class="cal-weekdays" aria-hidden="true">
+        <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+      </div>
+      <div class="cal-days" id="cal-days" role="grid" aria-label="Días del mes"></div>
+    </div>
+  </section>
+
+  <div id="banner-temporal" class="temporal-banner" hidden></div>
+
+  <section class="avisos-board" id="avisos-board" aria-label="Avisos importantes" hidden>
+    <div class="avisos-head">
+      <strong>Avisos e indicaciones activas</strong>
+    </div>
+    <ul id="lista-avisos" class="avisos-list"></ul>
+  </section>
+
+  <div class="grid" id="main-grid">
+    <div class="left-col">
+      <section class="panel" aria-labelledby="hoy">
+        <div class="head">
+          <h2 id="hoy">Tomas de hoy</h2>
+          <span class="count" id="count">0 de 0</span>
+        </div>
+        <div class="bar"><i id="fill"></i></div>
+
+        <div class="slot" id="slot-manana">
+          <h3>Mañana</h3>
+          <ul id="list-manana"></ul>
+        </div>
+        <div class="slot" id="slot-mediodia">
+          <h3>Mediodía</h3>
+          <ul id="list-mediodia"></ul>
+        </div>
+        <div class="slot" id="slot-noche">
+          <h3>Noche</h3>
+          <ul id="list-noche"></ul>
+        </div>
+        <div class="slot" id="slot-caso">
+          <h3>Solo si lo necesitas</h3>
+          <ul id="list-caso"></ul>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-bitacora" style="margin-top:20px;" aria-labelledby="bitacora-titulo">
+        <div class="head">
+          <h2 id="bitacora-titulo">Estado del paciente y relevo</h2>
+        </div>
+        <p class="muted-small" id="bitacora-desc">Registro rápido de cómo ha ido el día para el siguiente turno.</p>
+        
+        <div class="chips" id="estado-chips" style="margin:12px 0;">
+          <button type="button" class="chip estado-chip" data-tag="Comió bien" aria-pressed="false">Comió bien</button>
+          <button type="button" class="chip estado-chip" data-tag="Poco apetito" aria-pressed="false">Poco apetito</button>
+          <button type="button" class="chip estado-chip" data-tag="Buen ánimo" aria-pressed="false">Buen ánimo</button>
+          <button type="button" class="chip estado-chip" data-tag="Durmió bien" aria-pressed="false">Durmió bien</button>
+          <button type="button" class="chip estado-chip" data-tag="Mareos / Debilidad" aria-pressed="false">Mareos / Debilidad</button>
+          <button type="button" class="chip estado-chip" data-tag="Dolor o malestar" aria-pressed="false">Dolor o malestar</button>
+        </div>
+
+        <div id="bitacora-form-wrap">
+          <label for="nota-turno">Observaciones del turno</label>
+          <textarea class="in" id="nota-turno" rows="2" placeholder="Ej. Tomó presión arterial (120/80), se recomienda hidratar bien..."></textarea>
+          <div class="actions" style="margin-top:10px;">
+            <button type="button" class="btn alt" id="btn-guardar-bitacora">Guardar nota del día</button>
+          </div>
+        </div>
+        <p id="bitacora-readonly-text" class="readonly-note" hidden></p>
+      </section>
+    </div>
+
+    <aside class="panel" id="panel-formulario">
+      <div class="form aviso-creator" id="bloque-crear-aviso">
+        <h2>Publicar aviso</h2>
+        <p class="muted-small">Notifica cualquier circunstancia, falta de stock o precaución para el paciente y cuidadores.</p>
+        <div>
+          <label for="aviso-texto">Mensaje del aviso</label>
+          <input class="in" id="aviso-texto" placeholder="Ej. Dar el Ibuprofeno siempre después del almuerzo">
+        </div>
+        <div class="row">
+          <div>
+            <label for="aviso-nivel">Prioridad</label>
+            <select class="in" id="aviso-nivel">
+              <option value="info">Informativo</option>
+              <option value="warn">Precaución</option>
+              <option value="urgent">Urgente / Alerta</option>
+            </select>
+          </div>
+          <div style="display:flex; align-items:end;">
+            <button class="btn" type="button" id="btn-publicar-aviso" style="width:100%;">Publicar aviso</button>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="form" role="form" aria-labelledby="nueva">
+        <h2 id="nueva">Añadir medicamento</h2>
+        <div>
+          <label for="nom">Nombre</label>
+          <input class="in" id="nom" placeholder="Por ejemplo, Paracetamol 1 g">
+        </div>
+
+        <div class="row">
+          <div>
+            <span class="lbl">Cantidad por toma</span>
+            <div class="step">
+              <button type="button" id="menos" aria-label="Menos">−</button>
+              <output id="cant">1</output>
+              <button type="button" id="mas" aria-label="Más">+</button>
+            </div>
+          </div>
+          <div>
+            <label for="uni">Presentación</label>
+            <select class="in" id="uni">
+              <option>comprimido</option>
+              <option>cápsula</option>
+              <option>gotas</option>
+              <option>ml</option>
+              <option>sobre</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <span class="lbl">¿Cuándo lo tomas?</span>
+          <div class="seg">
+            <label><input type="radio" name="modo" value="fijo" checked>A horas fijas<small>Todos los días o los días que elijas</small></label>
+            <label><input type="radio" name="modo" value="cada">Cada cierto número de horas<small>Por ejemplo, cada 8 horas</small></label>
+            <label><input type="radio" name="modo" value="caso">Solo en un caso concreto<small>Cuando aparece un síntoma o situación</small></label>
+          </div>
+        </div>
+
+        <div id="m-fijo">
+          <span class="lbl">Horas</span>
+          <div class="chips" id="horas">
+            <button class="chip time-chip" type="button" aria-pressed="true">08:00</button>
+            <button class="chip time-chip" type="button" aria-pressed="true">20:00</button>
+            <button class="chip add" type="button" id="addh">+ Añadir hora</button>
+          </div>
+          <span class="lbl" style="margin-top:14px">Días</span>
+          <div class="chips" id="dias-chips">
+            <button class="chip" aria-pressed="true" type="button">L</button>
+            <button class="chip" aria-pressed="true" type="button">M</button>
+            <button class="chip" aria-pressed="true" type="button">X</button>
+            <button class="chip" aria-pressed="true" type="button">J</button>
+            <button class="chip" aria-pressed="true" type="button">V</button>
+            <button class="chip" aria-pressed="true" type="button">S</button>
+            <button class="chip" aria-pressed="true" type="button">D</button>
+          </div>
+        </div>
+
+        <div id="m-cada" hidden class="row">
+          <div>
+            <label for="cada">Cada</label>
+            <select class="in" id="cada">
+              <option value="4">4 horas</option>
+              <option value="6" selected>6 horas</option>
+              <option value="8">8 horas</option>
+              <option value="12">12 horas</option>
+            </select>
+          </div>
+          <div>
+            <label for="ini">Primera toma</label>
+            <input class="in" id="ini" type="time" value="08:00">
+          </div>
+        </div>
+
+        <div id="m-caso" hidden class="case">
+          <div>
+            <label for="situ">¿En qué caso lo tomas?</label>
+            <input class="in" id="situ" placeholder="Por ejemplo, si tengo dolor de cabeza">
+          </div>
+          <div class="row">
+            <div>
+              <label for="max">Máximo al día</label>
+              <select class="in" id="max">
+                <option>1</option>
+                <option>2</option>
+                <option selected>3</option>
+                <option>4</option>
+              </select>
+            </div>
+            <div>
+              <label for="sep">Espera entre tomas</label>
+              <select class="in" id="sep">
+                <option>4 horas</option>
+                <option selected>6 horas</option>
+                <option>8 horas</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label for="nota">Nota (opcional)</label>
+          <textarea class="in" id="nota" rows="2" placeholder="Con comida, en ayunas…"></textarea>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button" id="btn-guardar">Guardar medicamento</button>
+          <button class="btn alt" type="button" id="btn-cancelar">Cancelar</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script src="script_horarios.js"></script>
+</body>
+</html>

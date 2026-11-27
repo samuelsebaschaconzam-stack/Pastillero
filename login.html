@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Iniciar sesión</title>
+  <link rel="stylesheet" href="login_styles.css">
+</head>
+<body>
+  <main class="login-wrap">
+    <div class="login-card">
+      <header class="login-head">
+        <a href="menu.html" class="back-link">← Volver al inicio</a>
+        <h1>Pastillero</h1>
+        <p class="login-sub">Selecciona tu perfil para habilitar las herramientas correspondientes.</p>
+      </header>
+
+      <div class="role-cards" id="role-cards">
+        <button type="button" class="role-card" data-role="admin">
+          <div class="role-card-top">
+            <strong>Administrador</strong>
+            <span class="role-tag">Requiere clave</span>
+          </div>
+          <span>Mantenimiento de datos y gestión médica.</span>
+        </button>
+
+        <button type="button" class="role-card" data-role="enfermero">
+          <div class="role-card-top">
+            <strong>Enfermero / Cuidador</strong>
+            <span class="role-tag">Requiere clave</span>
+          </div>
+          <span>Configurar medicamentos, publicar avisos, registrar estado del turno y marcar tomas.</span>
+        </button>
+
+        <button type="button" class="role-card" data-role="usuario">
+          <div class="role-card-top">
+            <strong>Usuario / Paciente</strong>
+            <span class="role-tag">Acceso directo</span>
+          </div>
+          <span>Consultar el horario del día, leer avisos y marcar los medicamentos ya tomados.</span>
+        </button>
+      </div>
+
+      <form id="pin-form" class="pin-box" hidden>
+        <label for="pin-input" id="pin-label">Clave de acceso</label>
+        <p class="pin-hint" id="pin-hint">Ingresa el PIN o contraseña de este rol para continuar.</p>
+        <div class="pin-row">
+          <div class="input-pass-wrap">
+            <input type="password" id="pin-input" class="in" maxlength="20" placeholder="••••" autocomplete="off" required>
+            <button type="button" id="btn-toggle-clave" class="btn-eye" aria-pressed="false">Mostrar</button>
+          </div>
+          <button type="submit" class="btn">Entrar</button>
+        </div>
+        <p id="pin-error" class="pin-error" role="alert" hidden>Clave incorrecta. Inténtalo de nuevo.</p>
+        <button type="button" id="btn-cancelar-pin" class="btn-link">← Elegir otro rol</button>
+      </form>
+    </div>
+  </main>
+
+  <script src="script_login.js"></script>
+</body>
+</html>

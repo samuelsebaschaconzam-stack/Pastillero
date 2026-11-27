@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eef2f0">
+  <title>Pastillero</title>  
+  <link rel="stylesheet" href="styles_menu.css">
+</head>
+<body>
+  <div class="w">
+    <header>
+      <span class="logo">Pastillero</span>
+      <nav aria-label="Navegación principal">
+        <a class="hide" href="#como">Cómo funciona</a>
+        <a class="hide" href="#cuidadores">Para quién</a>
+        <a href="#lista">Lista de espera</a>
+      </nav>
+    </header>
+    <main>
+      <div class="hero">
+        <div>
+          <h1>Que nadie tenga que preguntar «¿ya se tomó la pastilla?»</h1>
+          <p>Un cuaderno compartido para quien cuida a un familiar mayor: medicación, cómo ha ido el día y un resumen listo para pasar el turno.</p>
+          <div class="ctas">
+            <a class="btn" href="login.html">Abrir el cuaderno</a>
+            <a class="btn ghost" href="#como">Ver cómo funciona</a>
+          </div>
+        </div>
+        <div class="phone" aria-label="Vista previa de la aplicación">
+          <h3>Hoy · martes</h3>
+          <ul class="tl">
+            <li class="d"><b>08:00</b><span>Dexametasona · 1 pastilla</span></li>
+            <li class="d"><b>09:30</b><span>Complejo B · con el desayuno</span></li>
+            <li><b>14:00</b>Omeprazol · 1 cápsula</li>
+            <li><b>21:00</b>Paracetamol · si hay dolor</li>
+          </ul>
+          <span class="tag">Comió bien</span><span class="tag">Buen ánimo</span>
+          <div class="mini">Preparar resumen del turno</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="band">
+    <div class="w">
+      <h2>Lo que se pierde cuando cambia quien cuida</h2>
+      <div class="three">
+        <div><h3>La última toma</h3><p>Dos personas dan la misma pastilla, o nadie la da. Los mensajes se pierden entre fotos y audios.</p></div>
+        <div><h3>Los detalles del día</h3><p>«Hoy comió poco» o «se mareó al levantarse» rara vez llega a quien entra después.</p></div>
+        <div><h3>La tranquilidad</h3><p>Quien cuida a distancia no sabe si todo va bien hasta que llama y molesta.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="w">
+    <section class="s" id="como">
+      <h2>Tres gestos al día</h2>
+      <ol class="steps">
+        <li><h3>Añade las tomas</h3><p>Medicamento, dosis y hora. Se repiten cada día sin volver a escribirlas.</p></li>
+        <li><h3>Marca y anota</h3><p>Un toque por toma hecha. Botones rápidos para apetito, sueño, dolor o ánimo.</p></li>
+        <li><h3>Pasa el relevo</h3><p>Un resumen con lo hecho, lo pendiente y las notas, para copiar y enviar.</p></li>
+      </ol>
+    </section>
+
+    <section class="s" id="cuidadores" style="padding-top:0">
+      <div class="split">
+        <h2 style="margin:0">Pensado para quien cuida, a cualquier hora</h2>
+        <ul class="checks">
+          <li><b>Letra grande y botones amplios,</b> para leer rápido y también para quien lo use con poca vista.</li>
+          <li><b>Abres y escribes,</b> los datos se quedan en tu dispositivo.</li>
+          <li><b>Modo oscuro</b> para las noches de guardia.</li>
+          <li><b>Un resumen, no un chat.</b> Solo lo que el siguiente cuidador necesita saber.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="s" id="lista" style="padding-top:0">
+      <div class="soon">
+        <div>
+          <h2>Próximamente: toda la familia en el mismo cuaderno</h2>
+          <p>Cada persona ve lo mismo al instante y recibe un aviso cuando se marca una toma.</p>
+        </div>
+        <div>
+          <form class="wl" id="waitlistForm" novalidate>
+            <input id="em" type="email" placeholder="tu@correo.com" aria-label="Correo electrónico" autocomplete="email">
+            <button class="btn" id="go" type="submit">Avísame</button>
+          </form>
+          <p class="note" id="msg" role="status" aria-live="polite">Aclaración: El correo no se guarda en ningún sitio.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer><span>Pastillero</span></footer>
+  </div>
+
+  <script src="script_menu.js"></script>
+</body>
+</html>

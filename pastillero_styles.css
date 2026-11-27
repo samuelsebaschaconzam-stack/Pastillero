@@ -1,0 +1,856 @@
+/*1.paleta de colores base*/
+:root {
+  --bg: rgb(241, 245, 247);
+  --surface: rgb(255, 255, 255);
+  --ink: rgb(21, 37, 45);
+  --muted: rgb(91, 110, 120);
+  --line: rgb(217, 226, 231);
+  --accent: rgb(37, 84, 216);
+  --on-accent: rgb(255, 255, 255);
+  --soft: rgb(227, 235, 251);
+  --amber: rgb(242, 179, 61);
+  --amber-soft: rgb(255, 241, 210);
+  --ok: rgb(46, 143, 101);
+  --danger: rgb(211, 47, 47);
+  --danger-soft: rgb(253, 232, 232);
+
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: rgb(15, 26, 32);
+    --surface: rgb(23, 37, 45);
+    --ink: rgb(232, 240, 243);
+    --muted: rgb(154, 176, 186);
+    --line: rgb(42, 60, 70);
+    --accent: rgb(122, 162, 255);
+    --on-accent: rgb(15, 26, 32);
+    --soft: rgb(30, 47, 79);
+    --amber-soft: rgb(58, 47, 20);
+    --ok: rgb(92, 203, 154);
+    --danger: rgb(244, 113, 113);
+    --danger-soft: rgb(64, 26, 26);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: rgb(15, 26, 32);
+  --surface: rgb(23, 37, 45);
+  --ink: rgb(232, 240, 243);
+  --muted: rgb(154, 176, 186);
+  --line: rgb(42, 60, 70);
+  --accent: rgb(122, 162, 255);
+  --on-accent: rgb(15, 26, 32);
+  --soft: rgb(30, 47, 79);
+  --amber-soft: rgb(58, 47, 20);
+  --ok: rgb(92, 203, 154);
+  --danger: rgb(244, 113, 113);
+  --danger-soft: rgb(64, 26, 26);
+}
+
+/*2.tipografia*/
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 Figtree, system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Bricolage Grotesque", Figtree, system-ui, sans-serif;
+  margin: 0;
+  letter-spacing: -.01em;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/*3.header y ficha paciente*/
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+header.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+.date {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.patient-banner {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.patient-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.allergy-pill {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+/*4.calendario minimizado y expandido*/
+.calendar-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+}
+
+.cal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.cal-nav-group,
+.cal-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cal-head h2 {
+  font-size: 1.15rem;
+  text-transform: capitalize;
+  min-width: 145px;
+  text-align: center;
+}
+
+.cal-nav {
+  padding: 4px 12px;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.cal-tool-btn {
+  padding: 6px 12px;
+  font-size: 0.88rem;
+}
+
+.week-strip {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.week-pill {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  border-radius: 14px;
+  padding: 8px 4px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.week-pill small {
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.week-pill b {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.week-pill:hover {
+  border-color: var(--accent);
+}
+
+.week-pill.is-today {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.week-pill[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.week-pill[aria-pressed="true"] small {
+  color: inherit;
+  opacity: 0.9;
+}
+
+.has-record-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  margin-top: 2px;
+}
+
+.week-pill[aria-pressed="true"] .has-record-dot,
+.cal-day[aria-pressed="true"] .has-record-dot {
+  background: var(--on-accent);
+}
+
+.cal-weekdays,
+.cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.cal-weekdays span {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding-bottom: 4px;
+}
+
+.cal-day {
+  aspect-ratio: 1 / 1;
+  max-height: 46px;
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.cal-day:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.cal-day.is-today {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.cal-day[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.cal-day.empty {
+  border-color: transparent;
+  background: transparent;
+  cursor: default;
+}
+
+/* Banner temporal (Historial / Futuro) */
+.temporal-banner {
+  padding: 12px 16px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.temporal-banner.past {
+  background: var(--soft);
+  color: var(--ink);
+  border: 1px solid var(--accent);
+}
+
+.temporal-banner.future {
+  background: var(--amber-soft);
+  color: var(--ink);
+  border: 1px solid var(--amber);
+}
+
+/* Tablero de Avisos del Enfermero / Admin */
+.avisos-board {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+
+.avisos-head {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.avisos-list {
+  display: grid;
+  gap: 8px;
+}
+
+.aviso-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+}
+
+.aviso-item.warn {
+  border-left-color: var(--amber);
+  background: var(--amber-soft);
+}
+
+.aviso-item.urgent {
+  border-left-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.aviso-content {
+  display: grid;
+  gap: 2px;
+}
+
+.aviso-meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/*5.diseño general*/
+.grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: 1.1fr .9fr;
+    align-items: start;
+  }
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.head h2 {
+  font-size: 1.4rem;
+}
+
+.count {
+  font-weight: 600;
+  color: var(--ok);
+}
+
+.bar {
+  height: 8px;
+  border-radius: 99px;
+  background: var(--line);
+  overflow: hidden;
+  margin: 8px 0 18px;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: var(--ok);
+  border-radius: 99px;
+  transition: width .3s;
+}
+
+/*6.dosis y medicamentos */
+.slot {
+  margin-top: 18px;
+}
+
+.slot h3 {
+  font-size: 1rem;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.dose {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.dose time {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.dose .info {
+  display: grid;
+}
+
+.dose .info span {
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.dose .taken-stamp {
+  color: var(--ok);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.check {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.check:disabled {
+  border-color: var(--muted);
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.dose.done {
+  background: var(--soft);
+  border-color: transparent;
+}
+
+.dose.done .check {
+  background: var(--ok);
+  border-color: var(--ok);
+}
+
+.dose.done .check:disabled {
+  opacity: 0.85;
+}
+
+.dose.done .check::after {
+  content: "✓";
+  color: rgb(255, 255, 255);
+  font-weight: 700;
+}
+
+.dose.done .info strong {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.prn {
+  background: var(--amber-soft);
+  border-color: transparent;
+  grid-template-columns: 1fr auto;
+}
+
+.prn .meta {
+  font-size: .85rem;
+  color: var(--muted);
+}
+
+/*7.botones y form*/
+.btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-weight: 600;
+  background: var(--accent);
+  color: var(--on-accent);
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn.alt {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.form h2 {
+  font-size: 1.4rem;
+}
+
+.muted-small {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 22px 0;
+}
+
+.readonly-note {
+  background: var(--bg);
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  color: var(--ink);
+  margin: 8px 0 0;
+}
+
+.resumen-box {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  white-space: pre-wrap;
+  max-height: 55vh;
+  overflow-y: auto;
+  margin: 0;
+}
+
+label,
+.lbl {
+  font-weight: 600;
+  font-size: .95rem;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.in {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 520px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  padding: 4px;
+}
+
+.step button {
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  border: 0;
+  background: var(--soft);
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.step output {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.seg {
+  display: grid;
+  gap: 8px;
+}
+
+.seg label {
+  margin: 0;
+  font-weight: 500;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px;
+  cursor: pointer;
+  display: grid;
+  gap: 0;
+}
+
+.seg label small {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.seg input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.seg label:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--soft);
+}
+
+.seg label:has(input:focus-visible) {
+  outline: 3px solid var(--accent);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+
+.chip:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+}
+
+.chip.add {
+  border-style: dashed;
+  color: var(--muted);
+}
+
+.case {
+  background: var(--amber-soft);
+  border-radius: 14px;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+/*resumen y administracion*/
+.role-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 26, 32, 0.82);
+  backdrop-filter: blur(4px);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.role-modal {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 28px 24px;
+  max-width: 540px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  margin: auto;
+}
+
+.admin-modal-wide {
+  max-width: 680px;
+}
+
+.admin-sections {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-card {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.admin-card h3 {
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+
+.admin-card.danger-zone {
+  border-color: rgba(211, 47, 47, 0.35);
+}
+
+.role-modal h2 {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.role-sub {
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+
+.top-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.role-badge {
+  background: var(--soft);
+  color: var(--accent);
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+.btn.danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn-del-med {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--danger);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-del-med:hover {
+  background: rgba(211, 47, 47, 0.1);
+}
+
+.dose.can-edit {
+  grid-template-columns: auto auto 1fr auto;
+}
+
+.prn.can-edit {
+  grid-template-columns: 1fr auto auto;
+}
+
+.grid.single-col {
+  grid-template-columns: 1fr;
+}
